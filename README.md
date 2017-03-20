@@ -3,7 +3,7 @@ Sparse methods (and compressed sensing) applied to gravitational wave signal pro
 
 ### How do I run the code?
 
-Let's see what the main functions do:
+Let's see what the main functions, [OMP.m](OMP.m) and [GenSparseVectors.m](GenSparseVectors.m), do:
 
 ```
 >> help OMP
@@ -21,9 +21,6 @@ Let's see what the main functions do:
   the stopping criterion is when the residual vector R is reduced below the 
   threshold, epsilon
  
-
->> help GenSparseProblem
-  Initialize random number generator
 
 >> help GenSparseVectors
   GenSparseVectors.m
@@ -44,6 +41,18 @@ Let's generate a measurement vector, y, with 10 measurements, that was the resul
 >> plot(1:length(y),y)
 >> plot(1:length(s),s)
 ```
+
+Check the mutual coherence, &mu; , which we want to be minimal between the measurement and the sparsity basis:
+
+```
+>> mumu(phi)
+
+ans =
+
+  0.013
+```
+
+
 
 Use OMP to obtain an estimate, x, of the initial vector:
 
