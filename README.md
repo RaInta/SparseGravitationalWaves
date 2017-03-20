@@ -133,7 +133,7 @@ Note that this version of OMP terminates when it meets the noise conditions impo
 
 The reconstruction fits the original signal exactly:
 
-<img src="./Figures/NSreconstructionOMP_IncrLineWdith.tif">
+<img src="./Figures/NSreconstructionOMP_IncrLineWdith.png">
 
 Yet, we used only 100 measurements--less than 10% of the coefficients--to do so! In other words, we only took 10% of the measurements required from conventional sampling theory. 
 
