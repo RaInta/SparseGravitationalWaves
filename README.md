@@ -36,13 +36,20 @@ that a decent application of group testing would have significantly altered the 
 
 From the mid-2000s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 
-This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see _e.g._
-[Cand\`{e}s, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006), Donoho, D.L.:"Compressed sensing," _IEEE Trans. on Information Theory_ **52**(4):1289-1306 (2006), MacKenzie, D.: "Compressed sensing makes every pixel count," _American Math. Soc._  **7**:114-127 (2009), Baraniuk, R.G.: "More Is Less: Signal Processing and the Data Deluge," _Science_ **331**:717 (2011)] technique has been applied to optical sensing (notably a one pixel
-camera, medical imaging and astronomy. 
+This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see the suggested reading list below for an introduction) technique has been applied to optical sensing (notably a one pixel camera, medical imaging and astronomy. 
+
+Introductory papers on sparse methods, compressed sensing or compressive sampling:
+
+   * Cand\`{e}s, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006) 
+   * Donoho, D.L.:"Compressed sensing," _IEEE Trans. on Information Theory_ **52**(4):1289-1306 (2006) 
+   * MacKenzie, D.: "Compressed sensing makes every pixel count," _American Math. Soc._  **7**:114-127 (2009)
+   * Baraniuk, R.G.: "More Is Less: Signal Processing and the Data Deluge," _Science_ **331**:717 (2011) 
 
 ### How OMP works
 
-Orthogonal Matching Pursuit (OMP) is an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).
+There is a zoo of algorithms that exploit the sparsity of data in some way. 
+
+Here we focus on Orthogonal Matching Pursuit (OMP). It's an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).
 It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
 
 <img src="./Figures/HowOMPWorks.jpg">
