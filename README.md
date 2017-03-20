@@ -27,21 +27,18 @@ such as a GPU, or preferably an FPGA, would speed up processing of this particul
 ### Background: from Syphilis to Cylons
 
 The concept of exploiting the sparse nature of data was made famous during World War II to minimise testing of drafted soldiers for 
-syphilis, using so-called 'group testing' methods (\cite{GroupTestingSyphilis}).
+syphilis, using so-called 'group testing' methods [Dorfman, R.: "The detection of defective members of large populations," _The Annals of Mathematical Statistics_ **14**(4):436-440 (1943)].
 
 <img src="./Figures/SyphilisDanceHall.png">
 
 A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling. It has even been suggested
 that a decent application of group testing would have significantly altered the plot in the rebooted sci-fi TV series 'Battlestar Galactica' [Bilder, C.R.: "Human or Cylon? Group testing on 'Battlestar Galactica'," _Chance_ **22**(3):46-50 (2009)].
 
+From the mid-2000s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 
-From the mid-200s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
-This so-called 'compressive sampling' (CS; also known as 'compressed sensing'
-\cite{CandesCSIntro, CSIntro, DonohoCS, MoreIsLess})
-technique has been applied to optical sensing (notably a one pixel
-camera \cite{SinglePixelCamera}), medical imaging \cite{CS_MRI} and
-astronomy \cite{CSAstronomy, CSRadioInterferometer,
-CSAstroDataAnalysis, CSRadioAstroI, CSRadioAstroII, CS_OptimisedArrayConfig}.
+This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see _e.g._
+[Cand\`{e}s, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006), Donoho, D.L.:"Compressed sensing," _IEEE Trans. on Information Theory_ **52**(4):1289-1306 (2006), MacKenzie, D.: "Compressed sensing makes every pixel count," _American Math. Soc._  **7**:114-127 (2009), Baraniuk, R.G.: "More Is Less: Signal Processing and the Data Deluge," _Science_ **331**:717 (2011)] technique has been applied to optical sensing (notably a one pixel
+camera, medical imaging and astronomy. 
 
 ### How OMP works
 
