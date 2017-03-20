@@ -135,7 +135,9 @@ The reconstruction fits the original signal exactly:
 
 <img src="./Figures/NSreconstructionOMP_IncrLineWdith.png">
 
-Yet, we used only 100 measurements--less than 10% of the coefficients--to do so! In other words, we only took 10% of the measurements required from conventional sampling theory. 
+Yet, we used only 100 measurements--less than 10% of the coefficients--to do so! 
+
+In other words, we only took 10% of the measurements required from conventional sampling theory. 
 
 
 Let's look at generating a sparse system, with its own measurement matrix, using `GenSparseVectors`:
@@ -178,9 +180,9 @@ ans =
 
 ### Application of OMP to gravitational-wave inspiral signals
 
-The main use-case that justified the fairly large investment into the LIGO and Virgo gravitational wave projects was for the observation of the inspiral events associated with two closely orbiting compact objects (black holes and/or neutron stars) coalescing together, emitting progressively higher amplitude gravitational waves. 
+The main use-case that justified the fairly large investment into the LIGO and Virgo gravitational wave projects was for the observation of the inspiral events associated with two closely orbiting compact objects (black holes and/or neutron stars) coalescing together, emitting progressively higher amplitude, and frequency, gravitational waves. 
 
-As mentioned briefly in the introduction, we expect this signal to come as a _chirp_; that is, the frequency of the signal increases as a simple function of time. If we were to construct an efficient template bank to detect this signal with a low latency, we might parameterize this chirp with four parameters: the time of the peak amplitude, $t_0$, the associated frequency, $f_0$, the slope $d$ and the Q-factor, $Q$: 
+As mentioned briefly in the introduction, we expect this signal to come as a _chirp_; that is, the frequency of the signal increases as a simple function of time. If we were to construct an efficient template bank to detect this signal with a low latency, we might parameterize this chirp with four parameters: the time of the peak amplitude, _t0_, the associated frequency, _f0_, the slope _d_ and the Q-factor, _Q_: 
 
 
 <img src="./Figures/ChirpletSpectrogram_TemplateDiagram.jpg">
