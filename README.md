@@ -15,11 +15,8 @@ Recently a powerful mathematical framework has been developed, allowing _e.g._ a
 reconstruction of signals sampled at rates well below that determined by the
 Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
 
-Here I apply these  
-sparse methods to gravitational wave data
-analysis. In some cases, they may
-improve computational efficiency enough to make a number of
-continuous wave searches viable that are currently computationally prohibited. 
+Here I apply these sparse methods to gravitational wave data analysis. In some cases, they may
+improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
 
 Another application may help improve position resolution of certain burst gravitational wave sources detected by gravitational wave networks.
 
@@ -32,21 +29,29 @@ such as a GPU, or preferably an FPGA, would speed up processing of this particul
 The concept of exploiting the sparse nature of data was made famous during World War II to minimise testing of drafted soldiers for 
 syphilis, using so-called 'group testing' methods (\cite{GroupTestingSyphilis}).
 
-
+<img src="./Figures/SyphilisDanceHall.png">
 
 A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling.
 
-
-
-
-this powerful new mathematical framework
-enables one to determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
+From the mid-200s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 This so-called 'compressive sampling' (CS; also known as 'compressed sensing'
 \cite{CandesCSIntro, CSIntro, DonohoCS, MoreIsLess})
 technique has been applied to optical sensing (notably a one pixel
 camera \cite{SinglePixelCamera}), medical imaging \cite{CS_MRI} and
 astronomy \cite{CSAstronomy, CSRadioInterferometer,
 CSAstroDataAnalysis, CSRadioAstroI, CSRadioAstroII, CS_OptimisedArrayConfig}.
+
+### How OMP works
+
+Orthogonal Matching Pursuit (OMP) is an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).
+It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
+
+<img src="./Figures/HowOMPWorks.jpg">
+
+This process is halted when the _stopping criterion_ is met. Often we are looking for the _N_ most significant coefficients in the data. In this case, we halt the procedure after _N_
+loops. However, in the case of real-world signals, we don't often get a nice clean signal and have noise to contend with. The beauty of OMP is that we can define a noise threshold, &epsilon;, as a stopping criterion.
+This is a Euclidean bound on the total noise of the system.
+
 
 ### How do I run the code?
 
