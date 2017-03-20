@@ -1,6 +1,53 @@
 # SparseGravitationalWaves
 Sparse methods (and compressed sensing) applied to gravitational wave signal processing 
 
+Gravitational wave signals are expected be sparse in four main
+sensing bases, according to the source: transient ('burst')
+sources are expected to appear as isolated pulses in the time
+domain, quasi-monochromatic ('continuous') signals appear as a
+small number of frequencies in the Fourier domain. The early
+(stationary phase) inspiral portion of an unstable close compact
+binary system is expected to produce a sparse signal in the
+time-frequency ('chirp') plane (which we've already seen!). Finally the so-called 'stochastic
+background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
+
+Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate
+reconstruction of signals sampled at rates well below that determined by the
+Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
+
+Here I apply these  
+sparse methods to gravitational wave data
+analysis. In some cases, they may
+improve computational efficiency enough to make a number of
+continuous wave searches viable that are currently computationally prohibited. 
+
+Another application may help improve position resolution of certain burst gravitational wave sources detected by gravitational wave networks.
+
+Note that the run-time for the code I've implemented here (a basic Orthogonal Matching Pursuit (OMP) algorithm with a noise-based stopping criterion) 
+is relatively poor. A hardware acceleration method,
+such as a GPU, or preferably an FPGA, would speed up processing of this particular implementation by a factor of almost 3,000.
+
+### Background: from Syphilis to Cylons
+
+The concept of exploiting the sparse nature of data was made famous during World War II to minimise testing of drafted soldiers for 
+syphilis, using so-called 'group testing' methods (\cite{GroupTestingSyphilis}).
+
+
+
+A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling.
+
+
+
+
+this powerful new mathematical framework
+enables one to determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
+This so-called 'compressive sampling' (CS; also known as 'compressed sensing'
+\cite{CandesCSIntro, CSIntro, DonohoCS, MoreIsLess})
+technique has been applied to optical sensing (notably a one pixel
+camera \cite{SinglePixelCamera}), medical imaging \cite{CS_MRI} and
+astronomy \cite{CSAstronomy, CSRadioInterferometer,
+CSAstroDataAnalysis, CSRadioAstroI, CSRadioAstroII, CS_OptimisedArrayConfig}.
+
 ### How do I run the code?
 
 Let's see what the main functions, [OMP.m](OMP.m) and [GenSparseVectors.m](GenSparseVectors.m), do:
