@@ -15,7 +15,7 @@ Recently a powerful mathematical framework has been developed, allowing _e.g._ a
 reconstruction of signals sampled at rates well below that determined by the
 Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
 
-Here I apply these sparse methods to gravitational wave data analysis. In some cases, they may
+Here I show how to apply these sparse methods to gravitational wave data analysis. In some cases, they may
 improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
 
 Another application may help improve position resolution of certain burst gravitational wave sources detected by gravitational wave networks.
@@ -31,7 +31,9 @@ syphilis, using so-called 'group testing' methods (\cite{GroupTestingSyphilis}).
 
 <img src="./Figures/SyphilisDanceHall.png">
 
-A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling.
+A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling. It has even been suggested
+that a decent application of group testing would have significantly altered the plot in the rebooted sci-fi TV series 'Battlestar Galactica' [Bilder, C.R.: "Human or Cylon? Group testing on 'Battlestar Galactica'," _Chance_ **22**(3):46-50 (2009)].
+
 
 From the mid-200s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 This so-called 'compressive sampling' (CS; also known as 'compressed sensing'
@@ -53,7 +55,8 @@ loops. However, in the case of real-world signals, we don't often get a nice cle
 This is a Euclidean bound on the total noise of the system.
 
 
-### How do I run the code?
+
+### OMP in action 
 
 Let's see what the main functions, [OMP.m](OMP.m) and [GenSparseVectors.m](GenSparseVectors.m), do:
 
@@ -128,6 +131,13 @@ ans =
 
 Note that this version of OMP terminates when it meets the noise conditions imposed upon it, so the length of x here is 754, less than the full vector of coefficients (1024).
 
+The reconstruction fits the original signal exactly:
+
+<img src="./Figures/NSreconstructionOMP_IncrLineWdith.tif">
+
+Yet, we used only 100 measurements--less than 10% of the coefficients--to do so! In other words, we only took 10% of the measurements required from conventional sampling theory. 
+
+
 Let's look at generating a sparse system, with its own measurement matrix, using `GenSparseVectors`:
 
 ```
@@ -165,6 +175,16 @@ ans =
 >> figure(2)
 >> plot(1:length(s),s,'-ko',1:length(x),x,'-rx')
 ```
+
+### Application of OMP to gravitational-wave inspiral signals
+
+The main use-case that justified the fairly large investment into the LIGO and Virgo gravitational wave projects was for the observation of the inspiral events associated with two closely orbiting compact objects (black holes and/or neutron stars) coalescing together, emitting progressively higher amplitude gravitational waves. 
+
+As mentioned briefly in the introduction, we expect this signal to come as a _chirp_; that is, the frequency of the signal increases as a simple function of time. If we were to construct an efficient template bank to detect this signal with a low latency, we might parameterize this chirp with four parameters: the time of the peak amplitude, $t_0$, the associated frequency, $f_0$, the slope $d$ and the Q-factor, $Q$: 
+
+
+<img src="./Figures/ChirpletSpectrogram_TemplateDiagram.jpg">
+
 
 ### Working with a 4-dimensional wavelet ('Chirplet') bank
 
