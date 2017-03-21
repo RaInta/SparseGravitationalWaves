@@ -1,38 +1,27 @@
 # SparseGravitationalWaves
 Sparse methods (and compressed sensing) applied to gravitational wave signal processing 
 
-Gravitational wave signals are expected be sparse in four main
-sensing bases, according to the source: transient ('burst')
-sources are expected to appear as isolated pulses in the time
-domain, quasi-monochromatic ('continuous') signals appear as a
-small number of frequencies in the Fourier domain. The early
-(stationary phase) inspiral portion of an unstable close compact
-binary system is expected to produce a sparse signal in the
-time-frequency ('chirp') plane (which we've already seen!). Finally the so-called 'stochastic
-background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
+---
 
-Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate
-reconstruction of signals sampled at rates well below that determined by the
-Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
+The internet would be a pretty, but relatively empty, place if it weren't for sparse methods. Most lossy compression methods, such as [JPEG](https://en.wikipedia.org/wiki/JPEG) in the case of images, is based on the observation that most coefficients in commonly used basis systems (_e.g._ raw pixels) are negligible or ignorable in some way. This concept of _sparsity_ is seen across just about every domain in nature, from telecommunications to seismic phenomena.   
 
-Here I show how to apply these sparse methods to gravitational wave data analysis. In some cases, they may
-improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
+The focus of this project is on the vibrations in--and of--space-time itself, known as [_Gravitational waves_](https://en.wikipedia.org/wiki/Gravitational_wave). Gravitational wave signals are expected be sparse in four main sensing bases, according to the source: transient ('burst') sources are expected to appear as isolated pulses in the time domain, quasi-monochromatic ('continuous') signals appear as a small number of frequencies in the Fourier domain. The early (stationary phase) inspiral portion of an unstable close compact binary system is expected to produce a sparse signal in the time-frequency ('chirp') plane (which we've already seen!). Finally the so-called 'stochastic background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
+
+Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate reconstruction of signals sampled at rates well below that determined by the Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
+
+Here I show how to apply these sparse methods to gravitational wave data analysis. In some cases, they may improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
 
 Another application may help improve position resolution of certain burst gravitational wave sources detected by gravitational wave networks.
 
-Note that the run-time for the code I've implemented here (a basic Orthogonal Matching Pursuit (OMP) algorithm with a noise-based stopping criterion) 
-is relatively poor. A hardware acceleration method,
-such as a GPU, or preferably an FPGA, would speed up processing of this particular implementation by a factor of almost 3,000.
+Note that the run-time for the code I've implemented here (a basic Orthogonal Matching Pursuit (OMP) algorithm with a noise-based stopping criterion) is relatively poor. A [hardware acceleration method, such as a GPU, or preferably an FPGA](http://dl.acm.org/citation.cfm?id=2213806), would speed up processing of this particular implementation by a factor of almost 3,000.
 
 ### Background: from Syphilis to Cylons
 
-The concept of exploiting the sparse nature of data was made famous during World War II to minimise testing of drafted soldiers for 
-syphilis, using so-called 'group testing' methods [Dorfman, R.: "The detection of defective members of large populations," _The Annals of Mathematical Statistics_ **14**(4):436-440 (1943)].
+The concept of exploiting the sparse nature of data was made famous during World War II to minimise testing of drafted soldiers for syphilis, using so-called 'group testing' methods [Dorfman, R.: "The detection of defective members of large populations," _The Annals of Mathematical Statistics_ **14**(4):436-440 (1943)].
 
 <img src="./Figures/SyphilisDanceHall.png">
 
-A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling. It has even been suggested
-that a decent application of group testing would have significantly altered the plot in the rebooted sci-fi TV series 'Battlestar Galactica' [Bilder, C.R.: "Human or Cylon? Group testing on 'Battlestar Galactica'," _Chance_ **22**(3):46-50 (2009)].
+A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling. It has even been suggested that a decent application of group testing would have significantly altered the plot in the rebooted sci-fi TV series 'Battlestar Galactica' [Bilder, C.R.: "Human or Cylon? Group testing on 'Battlestar Galactica'," _Chance_ **22**(3):46-50 (2009)].
 
 From the mid-2000s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 
@@ -49,14 +38,11 @@ Introductory papers on sparse methods, compressed sensing or compressive samplin
 
 There is a zoo of algorithms that exploit the sparsity of data in some way. 
 
-Here we focus on Orthogonal Matching Pursuit (OMP). It's an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).
-It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
+Here we focus on Orthogonal Matching Pursuit (OMP). It's an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).  It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
 
 <img src="./Figures/HowOMPWorks.jpg">
 
-This process is halted when the _stopping criterion_ is met. Often we are looking for the _N_ most significant coefficients in the data. In this case, we halt the procedure after _N_
-loops. However, in the case of real-world signals, we don't often get a nice clean signal and have noise to contend with. The beauty of OMP is that we can define a noise threshold, &epsilon;, as a stopping criterion.
-This is a Euclidean bound on the total noise of the system.
+This process is halted when the _stopping criterion_ is met. Often we are looking for the _N_ most significant coefficients in the data. In this case, we halt the procedure after _N_ loops. However, in the case of real-world signals, we don't often get a nice clean signal and have noise to contend with. The beauty of OMP is that we can define a noise threshold, &epsilon;, as a stopping criterion.  This is a Euclidean bound on the total noise of the system.
 
 
 
@@ -93,6 +79,13 @@ Let's see what the main functions, [OMP.m](OMP.m) and [GenSparseVectors.m](GenSp
   which is created from M measurements of phi*s.
 ```
 
+So the main work-horse of this project is [OMP.m](OMP.m). Note that the heavy-lifting is done by solving the linear equation of the residuals (line 39):
+
+`xTmp = Psi\y;           % Find reconstructed x from this column`
+
+Note the slash operator here; it's been noted to be [2-3 times faster than explicitly taking the inverse](https://www.mathworks.com/help/matlab/ref/inv.html).
+
+
 Let's generate a measurement vector, y, with 10 measurements, that was the result of a measurement system characterized by a random 10x1024 measurement matrix, phi, from an underlying sparse vector, s, with up to 10 non-zero coefficients:
 
 ```
@@ -101,7 +94,7 @@ Let's generate a measurement vector, y, with 10 measurements, that was the resul
 >> plot(1:length(s),s)
 ```
 
-Check the mutual coherence, &mu; , which we want to be minimal between the measurement and the sparsity basis:
+Check the mutual coherence, &mu; , which is an effective measure for how spread out the signal, defined by _s_, is among the columns of the measurement matrix. If most of the signals are confined to a small fraction of the columns, then we have to sample more from the measurement matrix. In other words, the more spread out, the better. This means we wish to minimize the mutual coherence:
 
 ```
 >> mumu(phi)
@@ -135,7 +128,7 @@ ans =
 
 Note that this version of OMP terminates when it meets the noise conditions imposed upon it, so the length of x here is 754, less than the full vector of coefficients (1024).
 
-The reconstruction fits the original signal exactly:
+The reconstruction fits the original signal _exactly_:
 
 <img src="./Figures/NSreconstructionOMP_IncrLineWdith.png">
 
@@ -184,7 +177,7 @@ ans =
 
 ### Application of OMP to gravitational-wave inspiral signals
 
-The main use-case that justified the fairly large investment into the LIGO and Virgo gravitational wave projects was for the observation of the inspiral events associated with two closely orbiting compact objects (black holes and/or neutron stars) coalescing together, emitting progressively higher amplitude, and frequency, gravitational waves. 
+The main use-case that justified the fairly large investment into the LIGO and Virgo gravitational wave projects was the potential observation of the inspiral events associated with two closely orbiting compact objects (black holes and/or neutron stars) coalescing together, emitting progressively higher amplitude, and frequency, gravitational waves. 
 
 As mentioned briefly in the introduction, we expect this signal to come as a _chirp_; that is, the frequency of the signal increases as a simple function of time. If we were to construct an efficient template bank to detect this signal with a low latency, we might parameterize this chirp with four parameters: the time of the peak amplitude, _t0_, the associated frequency, _f0_, the slope _d_ and the Q-factor, _Q_: 
 
@@ -242,3 +235,5 @@ fs =
 >> ylabel('Amplitude (arbitrary)')
 >> title('Four dimensional OMP reconstruction (M_i=100, N_i=1024, S_i=10)')
 ```
+
+---
