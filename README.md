@@ -5,7 +5,7 @@ Sparse methods (and compressed sensing) applied to gravitational wave signal pro
 
 The internet would be a pretty, but relatively empty, place if it weren't for sparse methods. Most lossy compression methods, such as [JPEG](https://en.wikipedia.org/wiki/JPEG) in the case of images, is based on the observation that most coefficients in commonly used basis systems (_e.g._ raw pixels) are negligible or ignorable in some way. This concept of _sparsity_ is seen across just about every domain in nature, from telecommunications to seismic phenomena.   
 
-The focus of this project is on the vibrations in--and of--space-time itself, known as [_Gravitational waves_](https://en.wikipedia.org/wiki/Gravitational_wave). Gravitational wave signals are expected be sparse in four main sensing bases, according to the source: transient ('burst') sources are expected to appear as isolated pulses in the time domain, quasi-monochromatic ('continuous') signals appear as a small number of frequencies in the Fourier domain. The early (stationary phase) inspiral portion of an unstable close compact binary system is expected to produce a sparse signal in the time-frequency ('chirp') plane (which we've already seen!). Finally the so-called 'stochastic background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
+The focus of this project is on the vibrations in--and of--space-time itself, known as [_gravitational waves_](https://en.wikipedia.org/wiki/Gravitational_wave). Gravitational wave signals are expected be sparse in four main sensing bases, according to the source: transient ('burst') sources are expected to appear as isolated pulses in the time domain, quasi-monochromatic ('continuous') signals appear as a small number of frequencies in the Fourier domain. The early (stationary phase) inspiral portion of an unstable close compact binary system is expected to produce a sparse signal in the time-frequency ('chirp') plane ([which we've already seen!](https://www.ligo.caltech.edu/detection) ). Finally the so-called 'stochastic background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
 
 Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate reconstruction of signals sampled at rates well below that determined by the Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
 
@@ -25,20 +25,20 @@ A commonly used algorithm in radio interferometry, CLEAN, relies on similar assu
 
 From the mid-2000s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 
-This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see the suggested reading list below for an introduction) technique has been applied to optical sensing (notably a one pixel camera, medical imaging and astronomy. 
+This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see the suggested reading list below for an introduction) technique has been applied to optical sensing (notably a one pixel camera), medical imaging and astronomy. 
 
 Introductory papers on sparse methods, compressed sensing or compressive sampling:
 
-   * Cand\`{e}s, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006) 
+   * Candès, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006) 
    * Donoho, D.L.:"Compressed sensing," _IEEE Trans. on Information Theory_ **52**(4):1289-1306 (2006) 
    * MacKenzie, D.: "Compressed sensing makes every pixel count," _American Math. Soc._  **7**:114-127 (2009)
    * Baraniuk, R.G.: "More Is Less: Signal Processing and the Data Deluge," _Science_ **331**:717 (2011) 
 
 ### How OMP works
 
-There is a zoo of algorithms that exploit the sparsity of data in some way. 
+There is a zoo of algorithms that exploit the sparsity of data in some way, in applications ranging from spacecraft telemetry, through MRI imaging, to monitoring of seismic activity. These rely on a slew of reconstruction techniques, such as the Simplex Method, Basis Pursuit, Matching Pursuit, LASSO.  
 
-Here we focus on Orthogonal Matching Pursuit (OMP). It's an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).  It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
+Here, I'll focus on an efficient type of [Matching Pursuit](https://en.wikipedia.org/wiki/Matching_pursuit) known as Orthogonal Matching Pursuit (OMP). It's an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).  It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
 
 <img src="./Figures/HowOMPWorks.jpg">
 
@@ -83,10 +83,10 @@ So the main work-horse of this project is [OMP.m](OMP.m). Note that the heavy-li
 
 `xTmp = Psi\y;           % Find reconstructed x from this column`
 
-Note the slash operator here; it's been noted to be [2-3 times faster than explicitly taking the inverse](https://www.mathworks.com/help/matlab/ref/inv.html).
+Note the slash operator here; it's been noted to be [2-3 times faster than explicitly taking the inverse](https://www.mathworks.com/help/matlab/ref/inv.html) if we're specifically looking for a solution to a linear system.
 
 
-Let's generate a measurement vector, y, with 10 measurements, that was the result of a measurement system characterized by a random 10x1024 measurement matrix, phi, from an underlying sparse vector, s, with up to 10 non-zero coefficients:
+Let's generate a measurement vector, y, with 10 measurements, that was the result of a measurement system characterized by a random 10x1024 measurement matrix, &phi;, from an underlying sparse vector, s, with up to 10 non-zero coefficients. In other words, we've got a 10-bit sample, and have injected in 10 signals with some random amplitude above the noise. Note that we haven't 'told' the OMP algorithm that there are 10 non-zero coefficients (_i.e._ the signal vector, _s_, has a sparsity of 10):
 
 ```
 >> [phi, y, s] = GenSparseVectors(10, 1024, 10);
@@ -94,7 +94,7 @@ Let's generate a measurement vector, y, with 10 measurements, that was the resul
 >> plot(1:length(s),s)
 ```
 
-Check the mutual coherence, &mu; , which is an effective measure for how spread out the signal, defined by _s_, is among the columns of the measurement matrix. If most of the signals are confined to a small fraction of the columns, then we have to sample more from the measurement matrix. In other words, the more spread out, the better. This means we wish to minimize the mutual coherence:
+Check the mutual coherence, &mu; , of &phi; which is an effective measure for how spread out the signal, defined by _s_, is among the columns of the measurement matrix. If most of the signals are confined to a small fraction of the columns, then we have to sample more from the measurement matrix. In other words, the more spread out, the better. This means we wish to minimize the mutual coherence:
 
 ```
 >> mumu(phi)
