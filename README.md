@@ -7,13 +7,13 @@ The internet would be a pretty, but relatively empty, place if it weren't for sp
 
 The focus of this project is on the vibrations in--and of--space-time itself, known as [_gravitational waves_](https://en.wikipedia.org/wiki/Gravitational_wave). Gravitational wave signals are expected be sparse in four main sensing bases, according to the source: transient ('burst') sources are expected to appear as isolated pulses in the time domain, quasi-monochromatic ('continuous') signals appear as a small number of frequencies in the Fourier domain. The early (stationary phase) inspiral portion of an unstable close compact binary system is expected to produce a sparse signal in the time-frequency ('chirp') plane ([which we've already seen!](https://www.ligo.caltech.edu/detection) ). Finally the so-called 'stochastic background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
 
-Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate reconstruction of signals sampled at rates well below that determined by the Shannon-Nyquist limit, as long as the signal is known to be sparse in some representation.
+Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate reconstruction of signals sampled at rates well below what you'd naively expect from the [Shannon-Nyquist limit](https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem), as long as the signal is known to be sparse in some representation (even if you don't know explicitly which representation).
 
-Here I show how to apply these sparse methods to gravitational wave data analysis. In some cases, they may improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
+Here I give a sketch on how to apply these sparse methods to gravitational wave data analysis. In some cases, they may improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
 
 Another application may help improve position resolution of certain burst gravitational wave sources detected by gravitational wave networks.
 
-Note that the run-time for the code I've implemented here (a basic Orthogonal Matching Pursuit (OMP) algorithm with a noise-based stopping criterion) is relatively poor. A [hardware acceleration method, such as a GPU, or preferably an FPGA](http://dl.acm.org/citation.cfm?id=2213806), would speed up processing of this particular implementation by a factor of almost 3,000.
+Note that the run-time for the code I've implemented here (a basic Orthogonal Matching Pursuit (OMP) algorithm with a noise-based stopping criterion) is relatively poor. A [hardware acceleration method, such as a GPU, or preferably an FPGA](http://dl.acm.org/citation.cfm?id=2213806), would speed up processing of this particular implementation by a factor of almost 3,000 for a reasonable use case.
 
 ### Background: from Syphilis to Cylons
 
@@ -21,7 +21,7 @@ The concept of exploiting the sparse nature of data was made famous during World
 
 <img src="./Figures/SyphilisDanceHall.png">
 
-A commonly used algorithm in radio interferometry, CLEAN, relies on similar assumptions, allowing a great deal of undersampling. It has even been suggested that a decent application of group testing would have significantly altered the plot in the rebooted sci-fi TV series 'Battlestar Galactica' [Bilder, C.R.: "Human or Cylon? Group testing on 'Battlestar Galactica'," _Chance_ **22**(3):46-50 (2009)].
+A commonly used algorithm in radio interferometry, [CLEAN](https://en.wikipedia.org/wiki/CLEAN_(algorithm)), relies on similar assumptions, allowing a great deal of undersampling. It has even been suggested that a decent application of group testing would have significantly altered the plot in the rebooted sci-fi TV series 'Battlestar Galactica' [Bilder, C.R.: "Human or Cylon? Group testing on 'Battlestar Galactica'," _Chance_ **22**(3):46-50 (2009)].
 
 From the mid-2000s, a powerful new mathematical framework was developed, which could determine the level of undersampling while still ensuring accurate reconstruction of a broad class of sparse signals.
 
@@ -36,14 +36,13 @@ Introductory papers on sparse methods, compressed sensing or compressive samplin
 
 ### How OMP works
 
-There is a zoo of algorithms that exploit the sparsity of data in some way, in applications ranging from spacecraft telemetry, through MRI imaging, to monitoring of seismic activity. These rely on a slew of reconstruction techniques, such as the Simplex Method, Basis Pursuit, Matching Pursuit, LASSO.  
+There is a zoo of algorithms that exploit the sparsity of data in some way, in applications ranging from spacecraft telemetry, through MRI imaging, to monitoring of seismic activity. These rely on a slew of reconstruction techniques, such as the Simplex Method, Basis Pursuit, Matching Pursuit and LASSO to name a few.  
 
 Here, I'll focus on an efficient type of [Matching Pursuit](https://en.wikipedia.org/wiki/Matching_pursuit) known as Orthogonal Matching Pursuit (OMP). It's an iterative algorithm that takes the initial data, and identifies the most significant coefficient (as defined by some inner product).  It removes this coefficient and re-calculates the remaining ('residual') data, to generate an underlying basis, obtaining the next most significant coefficient, _etc._:
 
 <img src="./Figures/HowOMPWorks.jpg">
 
 This process is halted when the _stopping criterion_ is met. Often we are looking for the _N_ most significant coefficients in the data. In this case, we halt the procedure after _N_ loops. However, in the case of real-world signals, we don't often get a nice clean signal and have noise to contend with. The beauty of OMP is that we can define a noise threshold, &epsilon;, as a stopping criterion.  This is a Euclidean bound on the total noise of the system.
-
 
 
 ### OMP in action 
