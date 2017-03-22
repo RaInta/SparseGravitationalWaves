@@ -3,11 +3,11 @@ Sparse methods (and compressed sensing) applied to gravitational wave signal pro
 
 ---
 
-The internet would be a pretty, but relatively empty, place if it weren't for sparse methods. Most lossy compression methods, such as [JPEG](https://en.wikipedia.org/wiki/JPEG) in the case of images, is based on the observation that most coefficients in commonly used basis systems (_e.g._ raw pixels) are negligible or ignorable in some way. This concept of _sparsity_ is seen across just about every domain in nature, from telecommunications to seismic phenomena.   
+The internet would be a pretty, but relatively empty, place if it weren't for sparse methods. Most lossy compression methods, such as [JPEG](https://en.wikipedia.org/wiki/JPEG) in the case of images, are based on the observation that most coefficients in commonly used basis systems (_e.g._ raw pixels) are negligible or ignorable in some way. This concept of _sparsity_ is seen across just about every domain in nature, from telecommunications to seismic phenomena.   
 
 The focus of this project is on the vibrations in--and of--space-time itself, known as [_gravitational waves_](https://en.wikipedia.org/wiki/Gravitational_wave). Gravitational wave signals are expected be sparse in four main sensing bases, according to the source: transient ('burst') sources are expected to appear as isolated pulses in the time domain, quasi-monochromatic ('continuous') signals appear as a small number of frequencies in the Fourier domain. The early (stationary phase) inspiral portion of an unstable close compact binary system is expected to produce a sparse signal in the time-frequency ('chirp') plane ([which we've already seen!](https://www.ligo.caltech.edu/detection) ). Finally the so-called 'stochastic background' is sparse in an inter-detector cross-correlation space in the Fourier domain.
 
-Recently a powerful mathematical framework has been developed, allowing _e.g._ accurate reconstruction of signals sampled at rates well below what you'd naively expect from the [Shannon-Nyquist limit](https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem), as long as the signal is known to be sparse in some representation (even if you don't know explicitly which representation).
+'Recently' a powerful mathematical framework has been developed, allowing _e.g._ accurate reconstruction of signals sampled at rates well below what you'd naively expect from the [Shannon-Nyquist limit](https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem), as long as the signal is known to be sparse in some representation (even if you don't know explicitly which representation).
 
 Here I give a sketch on how to apply these sparse methods to gravitational wave data analysis. In some cases, they may improve computational efficiency enough to make a number of continuous wave searches viable that are currently computationally prohibited. 
 
@@ -42,7 +42,8 @@ Here, I'll focus on an efficient type of [Matching Pursuit](https://en.wikipedia
 
 <img src="./Figures/HowOMPWorks.jpg">
 
-This process is halted when the _stopping criterion_ is met. Often we are looking for the _N_ most significant coefficients in the data. In this case, we halt the procedure after _N_ loops. However, in the case of real-world signals, we don't often get a nice clean signal and have noise to contend with. The beauty of OMP is that we can define a noise threshold, &epsilon;, as a stopping criterion.  This is a Euclidean bound on the total noise of the system.
+
+This procedure finds the most sparse basis possible to describe the data. This new space is guaranteed to have a much smaller dimensionality for sparse data. The process is halted when the _stopping criterion_ is met. Often we are looking for the _N_ most significant coefficients in the data. In this case, we halt the procedure after _N_ loops. However, in the case of real-world signals, we don't often get a nice clean signal and have noise to contend with. The beauty of OMP is that we can define a noise threshold, &epsilon;, as a stopping criterion.  This is a Euclidean bound on the total noise of the system.
 
 
 ### OMP in action 
@@ -78,14 +79,14 @@ Let's see what the main functions, [OMP.m](OMP.m) and [GenSparseVectors.m](GenSp
   which is created from M measurements of phi*s.
 ```
 
-So the main work-horse of this project is [OMP.m](OMP.m). Note that the heavy-lifting is done by solving the linear equation of the residuals (line 39):
+The main work-horse of this project is [OMP.m](OMP.m). Note that the heavy-lifting is done by solving the linear equation of the residuals (line 39):
 
 `xTmp = Psi\y;           % Find reconstructed x from this column`
 
-Note the slash operator here; it's been noted to be [2-3 times faster than explicitly taking the inverse](https://www.mathworks.com/help/matlab/ref/inv.html) if we're specifically looking for a solution to a linear system.
+Note the Matlab-specific slash operator here; it's been noted to be [2-3 times faster than explicitly taking the inverse](https://www.mathworks.com/help/matlab/ref/inv.html) if we're specifically looking for a solution to a linear system.
 
 
-Let's generate a measurement vector, y, with 10 measurements, that was the result of a measurement system characterized by a random 10x1024 measurement matrix, &phi;, from an underlying sparse vector, s, with up to 10 non-zero coefficients. In other words, we've got a 10-bit sample, and have injected in 10 signals with some random amplitude above the noise. Note that we haven't 'told' the OMP algorithm that there are 10 non-zero coefficients (_i.e._ the signal vector, _s_, has a sparsity of 10):
+Let's generate a measurement vector, y, with 10 measurements, that was the result of a measurement system characterized by a random 10x1024 measurement matrix, &phi;, from an underlying sparse vector, s, with up to 10 non-zero coefficients. In other words, take a 10-bit sample, and inject it with 10 signals with some random amplitude above the noise. Note that we haven't 'told' the OMP algorithm that there are 10 non-zero coefficients (_i.e._ the signal vector, _s_, has a sparsity of 10):
 
 ```
 >> [phi, y, s] = GenSparseVectors(10, 1024, 10);
@@ -93,7 +94,7 @@ Let's generate a measurement vector, y, with 10 measurements, that was the resul
 >> plot(1:length(s),s)
 ```
 
-Check the mutual coherence, &mu; , of &phi; which is an effective measure for how spread out the signal, defined by _s_, is among the columns of the measurement matrix. If most of the signals are confined to a small fraction of the columns, then we have to sample more from the measurement matrix. In other words, the more spread out, the better. This means we wish to minimize the mutual coherence:
+Just to be sure, we'll check the _mutual coherence_, &mu; , of &phi; which is an effective measure for how spread out the signal, defined by _s_, is among the columns of the measurement matrix. If most of the signals are confined to a small fraction of the columns, then we have to sample more from the measurement matrix. In other words, the more spread out, the better. This means we wish to have a relatively low magnitude (&mu; is defined between 0 and 1) for the mutual coherence:
 
 ```
 >> mumu(phi)
