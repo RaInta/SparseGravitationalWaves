@@ -27,11 +27,23 @@ From the mid-2000s, a powerful new mathematical framework was developed, which c
 
 This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see the suggested reading list below for an introduction) technique has been applied to optical sensing (notably a one pixel camera), medical imaging and astronomy. 
 
-To illustrate: many systems can be described well by a linear equation, say, _y_ = &phi;_s_ . Let's say  _s_ is a vector of length _N_ which can encode some signal. We can interpret _y_ as a vector resulting from passing _s_ through some system represented by the matrix &phi;. Let's also say you have _y_ in your possession, and have characterized your systems, so you also know &phi;. But you wish to know what the original signal, _s_, was. Now, you may remember from your high school algebra class that if you have _N_ unknowns, then, to fully determine these unknowns, you will need _N_ equations. In other words, to fully determine this linear system, you'll need &phi; to be a matrix of size _N_x_N_, and _y_ will be a vector of size _N_. Simple (incidentally, this is also effectively the assumption underlying the Shannon-Nyquist sampling limit mentioned above).
+To illustrate: many systems can be described well by a linear equation, say, _y_ = &phi;_s_ . Let's say  _s_ is a vector of length _N_ which can encode some signal. We can interpret _y_ as a vector resulting from passing _s_ through some system represented by the matrix &phi;. Let's also say you have _y_ in your possession, and have characterized your systems, so you also know &phi;. But you wish to know what the original signal, _s_, was. Now, you may remember from your high school algebra class that if you have _N_ unknowns, then, to fully determine these unknowns, you will need _N_ equations. In other words, to fully determine this linear system, you'll need &phi; to be a matrix of size _N_ x _N_, and _y_ will be a vector of size _N_. Simple (incidentally, this is also effectively the assumption underlying the Shannon-Nyquist sampling limit mentioned above).
 
 However, we can do better than this if we know that we can ignore most of the coefficients of _s_. A lot better. 
 
-#### Blasphemy! How does this work?
+#### Blasphemy! How does this dark magic work?
+
+Knowing _s_ is sparse means we can solve quite a different problem than doing all the hard work of solving the whole linear system. We want to look for the most sparse solution that will return a vector, say _x_, that is similar enough to _s_ that we're happy. More formally, we wish to solve the minimization problem:
+
+<img src="./Figures/Eqn_L0_minimization.png">
+
+Where the L-p norm is just a way of measuring various distances of a vector:
+
+<img src="./Figures/Eqn_Lp_norm_definition.png">
+
+
+
+
 
 Introductory papers on sparse methods, compressed sensing or compressive sampling:
 
