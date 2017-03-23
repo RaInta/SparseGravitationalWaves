@@ -27,6 +27,12 @@ From the mid-2000s, a powerful new mathematical framework was developed, which c
 
 This so-called 'compressive sampling' (CS; also known as 'compressed sensing'; see the suggested reading list below for an introduction) technique has been applied to optical sensing (notably a one pixel camera), medical imaging and astronomy. 
 
+To illustrate: many systems can be described well by a linear equation, say, _y_ = &phi;_s_ . Let's say  _s_ is a vector of length _N_ which can encode some signal. We can interpret _y_ as a vector resulting from passing _s_ through some system represented by the matrix &phi;. Let's also say you have _y_ in your possession, and have characterized your systems, so you also know &phi;. But you wish to know what the original signal, _s_, was. Now, you may remember from your high school algebra class that if you have _N_ unknowns, then, to fully determine these unknowns, you will need _N_ equations. In other words, to fully determine this linear system, you'll need &phi; to be a matrix of size _N_x_N_, and _y_ will be a vector of size _N_. Simple (incidentally, this is also effectively the assumption underlying the Shannon-Nyquist sampling limit mentioned above).
+
+However, we can do better than this if we know that we can ignore most of the coefficients of _s_. A lot better. 
+
+#### Blasphemy! How does this work?
+
 Introductory papers on sparse methods, compressed sensing or compressive sampling:
 
    * Candès, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006) 
