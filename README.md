@@ -33,7 +33,7 @@ However, we can do better than this if we know that we can ignore most of the co
 
 #### Blasphemy! How does this dark magic work?
 
-Knowing _s_ is sparse means we can solve quite a different problem than doing all the hard work of solving the whole linear system. We want to look for the most sparse solution that will return a vector, say _x_, that is similar enough to _s_ that we're happy. More formally, we wish to solve the minimization problem:
+Knowing _s_ is sparse means we can solve quite a different problem than doing all the hard work of solving the whole linear system. We want to look for the most sparse solution that will return a vector, say _x_, that is similar enough to _s_ that we're happy. More formally, we wish to solve the minimization problem (apologies for the poor formatting):
 
 <img src="./Figures/Eqn_L0_minimization.png">
 
@@ -41,11 +41,16 @@ Where the L-p norm is just a way of measuring various distances of a vector:
 
 <img src="./Figures/Eqn_Lp_norm_definition.png">
 
+This amounts to just counting the number of non-zero components of a guess for _x_ and seeing if this guess meets our constraints. Although this sounds simple, performing this for any decent sized system is an [NP-hard problem](https://en.wikipedia.org/wiki/NP-hardness).
+
+What Emmanuel Candès, Justin Romberg and Terry Tao showed around 2005 was, given some basic properties of the measurement system, the minimization problem could be simplified to:
+
+<img src="./Figures/Eqn_L1_minimization.png">
+
+Note the minimization now uses the L1-norm (which is just the sum of the amplitudes of _x_). It may not look like much of a change, but this can be re-cast into an already solved problem, that of the _Linear Program_. This is revolutionary!
 
 
-
-
-Introductory papers on sparse methods, compressed sensing or compressive sampling:
+To get a much better introduction to how magical sparse methods, compressed sensing or compressive sampling are, I suggest reading any of these (depending on your mathematical bent):
 
    * Candès, E., Romberg, J. and Tao, T.: "Robust uncertainty principles: Exact signal reconstruction from highly incomplete frequency information," _IEEE Trans. Information Theory_  **52**(2):489-509 (2006) 
    * Donoho, D.L.:"Compressed sensing," _IEEE Trans. on Information Theory_ **52**(4):1289-1306 (2006) 
